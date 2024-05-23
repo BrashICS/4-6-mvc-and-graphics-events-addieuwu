@@ -18,15 +18,23 @@ const COLS = 8;
 let cvs;
 let grid = [];
 
+let prevClick = [0,0];
+
+
+
 // The (overly simple) model
 class Square {
   colour = [0, 0, 0];
+  #trueColour = [0, 0, 0];
   value = 0;
 
   constructor(colour, value) {
     this.colour = colour;
+    this.#trueColour = colour;
     this.value = value;
   }
+
+  get trueColour() {return this.#trueColour}
 }
 
 // Setup the scene (runs first)
@@ -88,12 +96,6 @@ function draw_grid(x, y) {
 }
 
 function mouseClicked() {
-  // to find what tile the mouse is over
-  // first find where the grid starts
-  // then check what tile by dividing the grid length by the amount of tiles and accounting for gridX and gridY
-  // cant be too hard right?
-  // UPDATE: mouseX and mouseY are 0,0 at the top right so we don't need to worry about the grid offset
-
   let x = CVS_WIDTH / COLS
   let y = CVS_HEIGHT / ROWS
 
@@ -106,6 +108,11 @@ function mouseClicked() {
   while (j < mouseY) {
     j += x;
   }
-  // coords of tile in grid are [i/x -1, j/y -1]
+
+
+  grid[prevClick[0]][prevClick[1]].colour = grid[prevClick[0]][prevClick[1]].trueColour;
+  prevClick = [(j/y)-1, (i/x)-1];
+
+  grid[(j/y)-1][(i/x)-1].colour = [128,128,0]
   grid[(j/y)-1][(i/x)-1].value++;
 }
