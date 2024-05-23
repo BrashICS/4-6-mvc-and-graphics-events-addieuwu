@@ -11,8 +11,8 @@
 
 // Globals, event listeners, and general tomfoolery
 // Feel free to change values but beware the consequences
-const CVS_WIDTH = 404;
-const CVS_HEIGHT = 404;
+const CVS_WIDTH = 640;
+const CVS_HEIGHT = 640;
 const ROWS = 8;
 const COLS = 8;
 let cvs;
@@ -37,7 +37,11 @@ function setup() {
   for (let y = 0; y < ROWS; y++) {
     grid[y] = [];
     for (let x = 0; x < COLS; x++) {
-      grid[y].push(new Square([255, 255, 255], 0));
+      if ((x+y) % 2 == 0) {
+        grid[y].push(new Square([155, 155, 155], 0));
+      } else {
+        grid[y].push(new Square([80,100,80], 0));
+      }
     }
   }
   
@@ -81,4 +85,27 @@ function draw_grid(x, y) {
       }
     }
   }
+}
+
+function mouseClicked() {
+  // to find what tile the mouse is over
+  // first find where the grid starts
+  // then check what tile by dividing the grid length by the amount of tiles and accounting for gridX and gridY
+  // cant be too hard right?
+  // UPDATE: mouseX and mouseY are 0,0 at the top right so we don't need to worry about the grid offset
+
+  let x = CVS_WIDTH / COLS
+  let y = CVS_HEIGHT / ROWS
+
+  let i = 0;
+  while (i < mouseX) {
+    i += x;
+  }
+
+  let j = 0;
+  while (j < mouseY) {
+    j += x;
+  }
+  // coords of tile in grid are [i/x -1, j/y -1]
+  grid[(j/y)-1][(i/x)-1].value++;
 }
