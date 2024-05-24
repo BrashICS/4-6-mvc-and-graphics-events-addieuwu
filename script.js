@@ -15,6 +15,10 @@ const CVS_WIDTH = 640;
 const CVS_HEIGHT = 640;
 const ROWS = 8;
 const COLS = 8;
+
+const X = CVS_WIDTH / COLS;
+const Y = CVS_HEIGHT / ROWS;
+
 let cvs;
 let grid = [];
 
@@ -95,24 +99,36 @@ function draw_grid(x, y) {
   }
 }
 
-function mouseClicked() {
-  let x = CVS_WIDTH / COLS
-  let y = CVS_HEIGHT / ROWS
-
+function mousePressed(event) {
   let i = 0;
   while (i < mouseX) {
-    i += x;
+    i += X;
   }
 
   let j = 0;
   while (j < mouseY) {
-    j += x;
+    j += Y;
   }
 
+  
+  if(event.button === 0) {
+    // when left click, increase tile value by 1 and highlight the tile, while resetting the previously highlighted tile to its default colour
+    grid[prevClick[0]][prevClick[1]].colour = grid[prevClick[0]][prevClick[1]].trueColour;
+    prevClick = [(j/Y)-1, (i/X)-1];
+    grid[(j/Y)-1][(i/X)-1].colour = [128,128,0]
+    grid[(j/Y)-1][(i/X)-1].value++;
 
-  grid[prevClick[0]][prevClick[1]].colour = grid[prevClick[0]][prevClick[1]].trueColour;
-  prevClick = [(j/y)-1, (i/x)-1];
+  } else if (event.button === 2) {
+    // when right click, reset tile value and remove highlighted tile
+    grid[prevClick[0]][prevClick[1]].colour = grid[prevClick[0]][prevClick[1]].trueColour;
+    grid[(j/Y)-1][(i/X)-1].value = 0;
 
-  grid[(j/y)-1][(i/x)-1].colour = [128,128,0]
-  grid[(j/y)-1][(i/x)-1].value++;
+  }
+}
+
+function keyPressed() {
+  // when escape key pressed, remove highlighted tile
+  if (keyCode === ESCAPE) {
+    grid[prevClick[0]][prevClick[1]].colour = grid[prevClick[0]][prevClick[1]].trueColour;
+  }
 }
